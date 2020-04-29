@@ -11,6 +11,14 @@ import org.junit.runners.JUnit4
 class StatisticsUtilsTest {
 
     @Test
+    fun getActiveAndCompletedStats_empty_returnsZeroes() {
+        val tasks = emptyList<Task>()
+        val result = getActiveAndCompletedStats(tasks)
+        assertThat(result.completedTasksPercent, `is`(0f))
+        assertThat(result.activeTasksPercent, `is`(0f))
+    }
+
+    @Test
     fun getActiveAndCompletedStats_noCompleted_returnsHundredZero() {
         val tasks = listOf(
                 Task("title", "desc", isCompleted = false)
