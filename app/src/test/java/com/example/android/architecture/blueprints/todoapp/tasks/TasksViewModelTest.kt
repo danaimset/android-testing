@@ -1,10 +1,9 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.android.architecture.blueprints.todoapp.Event
+import com.example.android.architecture.blueprints.todoapp.getOrAwaitValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
@@ -21,15 +20,8 @@ class TasksViewModelTest {
     @Test
     fun addNewTask_setsNewTaskEvent() {
         val tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
-
-        val observer = Observer<Event<Unit>> {}
-        try {
-            tasksViewModel.newTaskEvent.observeForever(observer)
-            tasksViewModel.addNewTask()
-            val value = tasksViewModel.newTaskEvent.value
-            assertThat(value?.getContentIfNotHandled(), (not(nullValue())))
-        } finally {
-            tasksViewModel.newTaskEvent.removeObserver(observer)
-        }
+        tasksViewModel.addNewTask()
+        val value = tasksViewModel.newTaskEvent.getOrAwaitValue()
+        assertThat(value.getContentIfNotHandled(), (not(nullValue())))
     }
 }
