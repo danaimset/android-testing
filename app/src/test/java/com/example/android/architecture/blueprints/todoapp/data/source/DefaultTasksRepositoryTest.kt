@@ -1,8 +1,12 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
+import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.Dispatchers
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.IsEqual
 import org.junit.Before
+import org.junit.Test
 
 class DefaultTasksRepositoryTest {
     private val task1 = Task("Title1", "Description1")
@@ -29,5 +33,14 @@ class DefaultTasksRepositoryTest {
                 //  so we will keep this as Unconfined for now.
                 tasksRemoteDataSource, tasksLocalDataSource, Dispatchers.Unconfined
         )
+    }
+
+    @Test
+    fun getTasks_requestsAllTasksFromRemoteDataSource() {
+        // When tasks are requested from the tasks repository
+        val tasks = tasksRepository.getTasks(true) as Success
+
+        // Then tasks are loaded from the remote data source
+        assertThat(tasks.data, IsEqual(remoteTasks))
     }
 }
